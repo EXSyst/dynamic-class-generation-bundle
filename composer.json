@@ -1,0 +1,22 @@
+{
+  "name": "exsyst/dynamic-class-generation-bundle",
+  "type": "library",
+  "description": "Support bundle for dynamic class generation",
+  "keywords": [],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Exter-N",
+      "email": "exter-n@exter-n.fr"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "symfony/dependency-injection": "~3.4|~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "EXSyst\\DynamicClassGenerationBundle\\": "src/"
+    }
+  }
+}
