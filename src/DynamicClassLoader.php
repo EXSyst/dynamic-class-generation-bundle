@@ -14,17 +14,13 @@ namespace EXSyst\DynamicClassGenerationBundle;
 use EXSyst\DynamicClassGenerationBundle\Compiler\ClassGeneratorInterface;
 use EXSyst\DynamicClassGenerationBundle\Compiler\ClassInvalidatorInterface;
 use EXSyst\DynamicClassGenerationBundle\Compiler\ClassResolver;
+use EXSyst\DynamicClassGenerationBundle\Compiler\ResolvedClassInfo;
 
 class DynamicClassLoader
 {
-    /** @var ClassResolver */
-    private $resolver;
-
-    /** @var ClassGeneratorInterface */
-    private $generator;
-
-    /** @var ClassInvalidatorInterface */
-    private $invalidator;
+    private ClassResolver $resolver;
+    private ClassGeneratorInterface $generator;
+    private ClassInvalidatorInterface $invalidator;
 
     public function __construct(ClassResolver $resolver, ClassGeneratorInterface $generator, ClassInvalidatorInterface $invalidator)
     {
@@ -33,34 +29,52 @@ class DynamicClassLoader
         $this->invalidator = $invalidator;
     }
 
+    public function resolve(string $class): ResolvedClassInfo
+    {
+        return $this->resolver->resolve($class);
+    }
+
     public function load(string $class): void
     {
-        $resolvedClass = $this->resolver->resolve($class);
-        if (!\is_file($resolvedClass->getPath())) {
-            $directory = \dirname($resolvedClass->getPath());
-            if (!\is_dir($directory)) {
-                \mkdir($directory, 0777, true);
-            }
-            if (!$this->generator->generate($resolvedClass)) {
-                return;
-            }
-            if (\function_exists('opcache_invalidate')) {
-                \opcache_invalidate($resolvedClass->getPath(), true);
-            }
-        }
+        $resolvedClass = $this->resolve($class);
+        $this->generateIfNeeded($resolvedClass);
 
         require_once $resolvedClass->getPath();
     }
 
+    public function generateIfNeeded(ResolvedClassInfo $class): bool
+    {
+        if (\is_file($class->getPath())) {
+            return true;
+        }
+        $directory = \dirname($class->getPath());
+        if (!\is_dir($directory)) {
+            \mkdir($directory, 0777, true);
+        }
+        if (!$this->generator->generate($class)) {
+            return false;
+        }
+        if (\function_exists('opcache_invalidate')) {
+            \opcache_invalidate($class->getPath(), true);
+        }
+
+        return true;
+    }
+
     public function invalidate(string $class): void
     {
-        $resolvedClass = $this->resolver->resolve($class);
-        if (!\is_file($resolvedClass->getPath())) {
+        $resolvedClass = $this->resolve($class);
+        $this->invalidateResolved($resolvedClass);
+    }
+
+    public function invalidateResolved(ResolvedClassInfo $class): void
+    {
+        if (!\is_file($class->getPath())) {
             return;
         }
 
-        \unlink($resolvedClass->getPath());
-        $this->invalidator->invalidate($resolvedClass);
+        \unlink($class->getPath());
+        $this->invalidator->invalidate($class);
     }
 
     public function register(): void

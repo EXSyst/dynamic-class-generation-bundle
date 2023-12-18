@@ -1,10 +1,12 @@
 services:
-  EXSyst\DynamicClassGenerationBundle\Compiler\ChainClassInvalidator:
-    arguments:
-      $invalidators: ~
+  _defaults:
     autowire: false
     autoconfigure: false
     public: false
+
+  EXSyst\DynamicClassGenerationBundle\Compiler\ChainClassInvalidator:
+    arguments:
+      $invalidators: ~
     lazy: true
 
   EXSyst\DynamicClassGenerationBundle\Compiler\ClassGeneratorInterface:
@@ -17,27 +19,17 @@ services:
     arguments:
       $cacheDirectory: '%exsyst_dynamic_class_generation.cache_directory%'
       $prefixes: '%exsyst_dynamic_class_generation.resolver_prefix_tree%'
-    autowire: false
-    autoconfigure: false
-    public: false
 
   EXSyst\DynamicClassGenerationBundle\Compiler\DispatchClassGenerator:
     arguments:
       $generators: ~
-    autowire: false
-    autoconfigure: false
-    public: false
 
   EXSyst\DynamicClassGenerationBundle\Compiler\TemporaryWrappedClassGenerator:
     arguments:
       $generator: '@EXSyst\DynamicClassGenerationBundle\Compiler\DispatchClassGenerator'
       $temporaryDirectory: '%exsyst_dynamic_class_generation.temporary_directory%'
-    autowire: false
-    autoconfigure: false
-    public: false
     lazy: true
 
   EXSyst\DynamicClassGenerationBundle\DynamicClassLoader:
-    autoconfigure: false
     autowire: true
     public: true

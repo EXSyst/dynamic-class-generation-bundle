@@ -13,17 +13,10 @@ namespace EXSyst\DynamicClassGenerationBundle\Compiler;
 
 class ResolvedClassInfo
 {
-    /** @var string */
-    private $class;
-
-    /** @var string */
-    private $prefix;
-
-    /** @var string */
-    private $rest;
-
-    /** @var string */
-    private $path;
+    private string $class;
+    private string $prefix;
+    private string $rest;
+    private string $path;
 
     public function __construct(string $class, string $prefix, string $rest, string $path)
     {

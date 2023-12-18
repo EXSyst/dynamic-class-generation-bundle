@@ -15,11 +15,8 @@ use Symfony\Component\Filesystem\Exception\IOException;
 
 class TemporaryWrappedClassGenerator implements ClassGeneratorInterface
 {
-    /** @var ClassGeneratorInterface */
-    private $generator;
-
-    /** @var string */
-    private $temporaryDirectory;
+    private ClassGeneratorInterface $generator;
+    private string $temporaryDirectory;
 
     public function __construct(ClassGeneratorInterface $generator, string $temporaryDirectory)
     {
@@ -48,6 +45,10 @@ class TemporaryWrappedClassGenerator implements ClassGeneratorInterface
             throw $e;
         }
         \chmod($tmpFile, 0666 & ~\umask());
+        $targetDirectory = \dirname($class->getPath());
+        if (!\is_dir($targetDirectory)) {
+            \mkdir($targetDirectory, 0777, true);
+        }
         if (!\rename($tmpFile, $class->getPath())) {
             throw new IOException('Cannot rename temporary file with dynamic class '.$class->getClass());
         }

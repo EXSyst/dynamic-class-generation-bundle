@@ -13,11 +13,8 @@ namespace EXSyst\DynamicClassGenerationBundle\Compiler;
 
 class ClassResolver
 {
-    /** @var string */
-    private $cacheDirectory;
-
-    /** @var array */
-    private $prefixes;
+    private string $cacheDirectory;
+    private array $prefixes;
 
     public function __construct(string $cacheDirectory, array $prefixes)
     {

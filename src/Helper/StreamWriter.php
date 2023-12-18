@@ -16,8 +16,7 @@ class StreamWriter
     /** @var resource */
     private $fd;
 
-    /** @var string */
-    private $indent;
+    private string $indent;
 
     public function __construct($fd)
     {
@@ -39,7 +38,7 @@ class StreamWriter
         return $this;
     }
 
-    public function printfln(string $format = '', ...$args)
+    public function printfln(string $format = '', ...$args): self
     {
         if (!empty($format)) {
             \fwrite($this->fd, $this->indent);

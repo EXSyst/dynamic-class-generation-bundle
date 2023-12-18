@@ -14,7 +14,7 @@ namespace EXSyst\DynamicClassGenerationBundle\Compiler;
 class ChainClassInvalidator implements ClassInvalidatorInterface
 {
     /** @var ClassInvalidatorInterface[] */
-    private $invalidators;
+    private array $invalidators;
 
     public function __construct(array $invalidators)
     {

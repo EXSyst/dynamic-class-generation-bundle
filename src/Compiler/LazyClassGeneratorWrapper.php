@@ -13,8 +13,7 @@ namespace EXSyst\DynamicClassGenerationBundle\Compiler;
 
 class LazyClassGeneratorWrapper implements ClassGeneratorInterface
 {
-    /** @var ClassGeneratorInterface */
-    private $generator;
+    private ClassGeneratorInterface $generator;
 
     public function __construct(ClassGeneratorInterface $generator)
     {

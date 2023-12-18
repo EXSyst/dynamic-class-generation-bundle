@@ -14,7 +14,7 @@ namespace EXSyst\DynamicClassGenerationBundle\Compiler;
 class ChainClassGenerator implements ClassGeneratorInterface
 {
     /** @var ClassGeneratorInterface[] */
-    private $generators;
+    private array $generators;
 
     public function __construct(array $generators)
     {
